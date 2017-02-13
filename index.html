@@ -3,6 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>VinylWhere</title>
+	<link rel="stylesheet" href="app.css">
 </head>
 <body>
 	<h1>VinylWhere</h1>
@@ -18,14 +19,18 @@
 	<script id="template" type="x-tmpl-mustache">
 		{{ #results }}
 		<li>
-			<ul>
+			<ul class="details" onclick="this.classList.toggle('active')">
 				<li class="artist">{{ artist }}</li>
 				<li class="album">{{ album }}</li>
-				<li class="meta">{{ meta }}</li>
+				<li class="meta">
+				{{ #meta }}
+					<span class="tag">{{ . }}</span>
+				{{ /meta }}
+				</li>
 				<li class="sources">
 					<ul>
 					{{ #sources }}
-						<li>{{ . }}</li>
+						<li><a href="{{ . }}">{{ . }}</a></li>
 					{{ /sources }}
 					</ul>
 				</li>
