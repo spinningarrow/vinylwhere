@@ -5,8 +5,13 @@ fetch('/records.grouped.json.gz')
 		return records
 	})
 	.then(records => {
+		let lastQuery = ''
 		const handler = _ => {
 			const query = document.querySelector('input').value
+			if (query === lastQuery) return
+
+			lastQuery = query
+
 			if (!query) return renderData(records)
 
 			const queryRegexp = new RegExp(query, 'i')
