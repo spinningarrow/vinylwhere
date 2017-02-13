@@ -12,14 +12,24 @@
 	<div id="output"></div>
 
 	<script id="template" type="x-tmpl-mustache">
-		<table>
+		<ul>
 		{{ #results }}
-			<tr>
-				<td>{{ artist }}</td>
-				<td>{{ album }}</td>
-			</tr>
+			<li>
+				<ul>
+					<li class="artist">{{ artist }}</li>
+					<li class="album">{{ album }}</li>
+					<li class="meta">{{ meta }}</li>
+					<li class="sources">
+						<ul>
+						{{ #sources }}
+							<li>{{ . }}</li>
+						{{ /sources }}
+						</ul>
+					</li>
+				</ul>
+			</li>
 		{{ /results }}
-		</table>
+		</ul>
 	</script>
 
 	<script src="mustache.min.js"></script>
