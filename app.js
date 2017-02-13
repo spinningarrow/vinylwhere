@@ -23,10 +23,50 @@ fetch('/records.grouped.json.gz')
 		document.querySelector('input').addEventListener('keyup', throttledHandler)
 	})
 
-function renderData(data) {
+const renderData = (function () {
+	let allData = []
+	let offset = 0
+	const COUNT = 5
 	const template = document.querySelector('#template').innerHTML
 	Mustache.parse(template)
-	document.querySelector('#output').innerHTML = Mustache.render(template, {results: data})
+
+	return function (data) {
+		const isAppend = !data
+		const hasMore = offset < allData.length
+
+		if (isAppend && !hasMore) return
+
+		if (!isAppend) {
+			offset = 0
+			allData = data
+		}
+
+		const fragment = document.createDocumentFragment()
+		const ul = document.createElement('ul')
+
+		ul.innerHTML = Mustache.render(template, {
+			results: allData.slice(offset, offset + COUNT)
+		})
+
+		offset += COUNT
+
+		while (ul.hasChildNodes()) {
+			fragment.appendChild(ul.firstChild)
+		}
+
+		if (!isAppend) {
+			document.querySelector('#results').innerHTML = ''
+		}
+
+		document.querySelector('#results').appendChild(fragment)
+
+		return hasMore
+	}
+}())
+
+function loadMore(event) {
+	const hasMore = renderData()
+	if (!hasMore) event.target.classList.add('hidden')
 }
 
 function throttle(fn, minTime) {

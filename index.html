@@ -9,27 +9,29 @@
 
 	<p><input placeholder="Search" type="search"></p>
 
-	<div id="output"></div>
+	<div id="output">
+		<ul id="results"></ul>
+
+		<button id="load-more" type="button" onclick="loadMore(event)">Load more</button>
+	</div>
 
 	<script id="template" type="x-tmpl-mustache">
-		<ul>
 		{{ #results }}
-			<li>
-				<ul>
-					<li class="artist">{{ artist }}</li>
-					<li class="album">{{ album }}</li>
-					<li class="meta">{{ meta }}</li>
-					<li class="sources">
-						<ul>
-						{{ #sources }}
-							<li>{{ . }}</li>
-						{{ /sources }}
-						</ul>
-					</li>
-				</ul>
-			</li>
+		<li>
+			<ul>
+				<li class="artist">{{ artist }}</li>
+				<li class="album">{{ album }}</li>
+				<li class="meta">{{ meta }}</li>
+				<li class="sources">
+					<ul>
+					{{ #sources }}
+						<li>{{ . }}</li>
+					{{ /sources }}
+					</ul>
+				</li>
+			</ul>
+		</li>
 		{{ /results }}
-		</ul>
 	</script>
 
 	<script src="mustache.min.js"></script>
