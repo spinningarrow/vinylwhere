@@ -26,7 +26,7 @@ fetch('/records.grouped.json.gz')
 const renderData = (function () {
 	let allData = []
 	let offset = 0
-	const COUNT = 5
+	const COUNT = 100
 	const template = document.querySelector('#template').innerHTML
 	Mustache.parse(template)
 
