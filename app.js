@@ -1,4 +1,4 @@
-fetch('/records2.json')
+fetch('/records.grouped.json.gz')
 	.then(response => response.json())
 	.then(records => {
 		renderData(records)
