@@ -1,4 +1,4 @@
-fetch('/records.grouped.json.gz')
+fetch('http://vinylwhere.s3-ap-southeast-1.amazonaws.com/records.grouped.json')
 	.then(response => response.json())
 	.then(records => {
 		renderData(records)
