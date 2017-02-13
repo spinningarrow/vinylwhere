@@ -20,7 +20,10 @@ fetch('http://vinylwhere.s3-ap-southeast-1.amazonaws.com/records.grouped.json')
 		}
 		const throttledHandler = throttle(handler, 200)
 
-		document.querySelector('input').addEventListener('keyup', throttledHandler)
+		document.querySelector('#search').addEventListener('keyup', throttledHandler)
+	})
+	.then(_ => {
+		document.querySelector('#search').disabled = false
 	})
 
 const renderData = (function () {
