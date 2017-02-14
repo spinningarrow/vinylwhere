@@ -1,5 +1,5 @@
-fetch('http://vinylwhere.s3-ap-southeast-1.amazonaws.com/records.grouped.json.gz')
-	.then(response => response.json())
+get('http://vinylwhere.s3-ap-southeast-1.amazonaws.com/records.grouped.json.gz')
+	.then(JSON.parse)
 	.then(records => {
 		renderData(records)
 		return records
@@ -95,4 +95,22 @@ function throttle(fn, minTime) {
 			callCount = 0
 		}, minTime)
 	}
+}
+
+// Damn you, Safari ;_;
+function get(url, method) {
+	return new Promise((resolve, reject) => {
+		const httpRequest = new XMLHttpRequest()
+		httpRequest.onreadystatechange = _ => {
+			if (httpRequest.readyState === XMLHttpRequest.DONE) {
+				if (httpRequest.status === 200) {
+					resolve(httpRequest.responseText)
+				} else {
+					reject(httpRequest)
+				}
+			}
+		}
+		httpRequest.open(method || 'GET', url)
+		httpRequest.send()
+	})
 }
