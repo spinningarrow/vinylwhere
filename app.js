@@ -1,7 +1,7 @@
 get('http://vinylwhere.s3-ap-southeast-1.amazonaws.com/records.grouped.json.gz')
 	.then(JSON.parse)
 	.then(records => {
-		renderData(records)
+		renderApp(records)
 		return records
 	})
 	.then(records => {
@@ -12,10 +12,10 @@ get('http://vinylwhere.s3-ap-southeast-1.amazonaws.com/records.grouped.json.gz')
 
 			lastQuery = query
 
-			if (!query) return renderData(records)
+			if (!query) return renderApp(records)
 
 			const queryRegexp = new RegExp(query, 'i')
-			renderData(records.filter(r =>
+			renderApp(records.filter(r =>
 					r.artist.match(queryRegexp) || r.album.match(queryRegexp)))
 		}
 		const throttledHandler = throttle(handler, 200)
@@ -27,31 +27,21 @@ get('http://vinylwhere.s3-ap-southeast-1.amazonaws.com/records.grouped.json.gz')
 	})
 
 const renderData = (function () {
-	let allData = []
-	let offset = 0
+	let allData
+	let offset
+
 	const COUNT = 100
+	const hasMore = _ => offset < allData.length
 	const template = document.querySelector('#template').innerHTML
 	Mustache.parse(template)
 
-	return function (data) {
-		const isAppend = !data
-		const hasMore = offset < allData.length
-
-		if (isAppend && !hasMore) return
-
-		if (!isAppend) {
-			offset = 0
-			allData = data
-		}
-
+	function render(isAppend) {
 		const fragment = document.createDocumentFragment()
 		const ul = document.createElement('ul')
 
 		ul.innerHTML = Mustache.render(template, {
 			results: allData.slice(offset, offset + COUNT)
 		})
-
-		offset += COUNT
 
 		while (ul.hasChildNodes()) {
 			fragment.appendChild(ul.firstChild)
@@ -62,14 +52,24 @@ const renderData = (function () {
 		}
 
 		document.querySelector('#results').appendChild(fragment)
+	}
 
-		return hasMore
+	return data => {
+		const isAppend = !data
+		if (!isAppend) [offset, allData] = [0, data]
+
+		if (isAppend && !hasMore()) return false
+
+		render(isAppend)
+		offset += COUNT
+
+		return hasMore()
 	}
 }())
 
-function loadMore(event) {
-	const hasMore = renderData()
-	if (!hasMore) event.target.classList.add('hidden')
+function renderApp(data) {
+	const hasMore = renderData(data)
+	document.querySelector('#load-more').classList.toggle('hidden', !hasMore)
 }
 
 function throttle(fn, minTime) {
