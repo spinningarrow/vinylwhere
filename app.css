@@ -36,8 +36,12 @@ ul {
 }
 
 .meta .tag {
-	border: 1px solid #ccc;
-	border-radius: 5px;
+	border-radius: 4px;
+	border: 1px solid #d4d2c1;
+	color: #444;
+	display: inline-block;
+	font-size: small;
+	line-height: 1;
 	padding: 0.2em;
 }
 
