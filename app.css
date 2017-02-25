@@ -63,17 +63,19 @@ ul {
 	padding: 0.2em;
 }
 
-input {
-    width: 100%;
-    font-size: 1em;
-    border: 0;
-    border-bottom: 1px solid #c3ba63;
-    padding: 0.5em 0.1em;
+#search {
+	background: #fff5ef;
+	border-radius: 0;
+	border: 0;
+	box-sizing: border-box;
+	font-size: 1em;
+	padding: 0.5em 0.3em;
+	width: 100%;
 }
 
-input:focus {
-    outline: 0;
-    background: #fff7ae;
+#search:focus {
+	background: #ffe6d6;
+	outline: 0;
 }
 
 .hidden {
