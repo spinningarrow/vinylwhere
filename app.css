@@ -4,6 +4,16 @@ body {
 	margin: 1em;
 }
 
+h1 {
+	text-transform: lowercase;
+}
+
+h1 span {
+	border-left: 4px solid #ff9f66;
+	margin-left: 0.1em;
+	padding-left: 0.1em;
+}
+
 a {
 	color: #2077ce;
 	text-decoration: none;
