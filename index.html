@@ -22,8 +22,8 @@
 		{{ #results }}
 		<li>
 			<ul class="details" onclick="this.classList.toggle('active')">
-				<li class="artist">{{ artist }}</li>
-				<li class="album">{{ album }}</li>
+				<li class="artist">{{ &artist }}</li>
+				<li class="album">{{ &album }}</li>
 				<li class="meta">
 				{{ #meta }}
 					<span class="tag">{{ . }}</span>
