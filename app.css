@@ -91,3 +91,28 @@ ul {
 .hidden {
 	display: none;
 }
+
+.loading .details .artist {
+	height: 1.4em;
+	background: #eee;
+}
+
+.loading #results > li:nth-child(5n) .artist {
+	width: 50%;
+}
+
+.loading #results > li:nth-child(5n+1) .artist {
+	width: 70%;
+}
+
+.loading #results > li:nth-child(5n+2) .artist {
+	width: 60%;
+}
+
+.loading #results > li:nth-child(5n+3) .artist {
+	width: 40%;
+}
+
+.loading #results > li:nth-child(5n+4) .artist {
+	width: 30%;
+}

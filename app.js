@@ -1,31 +1,3 @@
-get('http://vinylwhere.s3-ap-southeast-1.amazonaws.com/records.grouped.json.gz')
-	.then(JSON.parse)
-	.then(records => {
-		renderApp(records)
-		return records
-	})
-	.then(records => {
-		let lastQuery = ''
-		const handler = _ => {
-			const query = document.querySelector('input').value
-			if (query === lastQuery) return
-
-			lastQuery = query
-
-			if (!query) return renderApp(records)
-
-			const queryRegexp = new RegExp(query, 'i')
-			renderApp(records.filter(r =>
-					r.artist.match(queryRegexp) || r.album.match(queryRegexp)))
-		}
-		const throttledHandler = throttle(handler, 200)
-
-		document.querySelector('#search').addEventListener('keyup', throttledHandler)
-	})
-	.then(_ => {
-		document.querySelector('#search').disabled = false
-	})
-
 const renderData = (function () {
 	let allData
 	let offset
@@ -113,4 +85,39 @@ function get(url, method) {
 		httpRequest.open(method || 'GET', url)
 		httpRequest.send()
 	})
+}
+
+function init() {
+	let blankRecords = Array(100).fill('')
+	document.body.classList.add('loading')
+	renderApp(blankRecords)
+
+	get('http://vinylwhere.s3-ap-southeast-1.amazonaws.com/records.grouped.json.gz')
+		.then(JSON.parse)
+		.then(records => {
+			renderApp(records)
+			document.body.classList.remove('loading')
+			return records
+		})
+		.then(records => {
+			let lastQuery = ''
+			const handler = _ => {
+				const query = document.querySelector('input').value
+				if (query === lastQuery) return
+
+				lastQuery = query
+
+				if (!query) return renderApp(records)
+
+				const queryRegexp = new RegExp(query, 'i')
+				renderApp(records.filter(r =>
+					r.artist.match(queryRegexp) || r.album.match(queryRegexp)))
+			}
+			const throttledHandler = throttle(handler, 200)
+
+			document.querySelector('#search').addEventListener('keyup', throttledHandler)
+		})
+		.then(_ => {
+			document.querySelector('#search').disabled = false
+		})
 }
