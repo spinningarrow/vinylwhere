@@ -1,7 +1,7 @@
 body {
 	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-    line-height: 1.4;
-    padding: 2em;
+	line-height: 1.4;
+	margin: 1em;
 }
 
 ul {
@@ -12,7 +12,8 @@ ul {
 
 #results > li {
 	cursor: default;
-	padding: 0.5em 0;
+	margin-left: -0.5em;
+	padding: 0.5em;
 }
 
 #results > li:hover {
@@ -33,6 +34,10 @@ ul {
 
 .details.active .sources {
 	display: block;
+}
+
+.details .sources ul {
+	margin: 0.5em 0;
 }
 
 .meta .tag {
