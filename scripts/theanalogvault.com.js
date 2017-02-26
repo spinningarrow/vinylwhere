@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const dump = require('./dump/theanalogvault.com/all.json')
+const dump = require(process.argv[2])
 
 const album = albumWithMeta => albumWithMeta ? albumWithMeta.split('|')[0].trim() : ''
 

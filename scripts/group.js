@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
-const data = require('./records3.ungrouped.json')
+const data = require(process.argv[2])
+
 var store = []
 
 const find = e => store.find(s => s.artist == e.artist && s.album == e.album)
