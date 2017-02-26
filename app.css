@@ -73,6 +73,14 @@ ul {
 	padding: 0.2em;
 }
 
+.meta .sources-count {
+	background-color: #f99458;
+	border-color: #f99458;
+	color: white;
+	min-width: 1em;
+	text-align: center;
+}
+
 #search {
 	background: #fff5ef;
 	border-radius: 0;

@@ -26,6 +26,9 @@
 				{{ #meta }}
 					<span class="tag">{{ . }}</span>
 				{{ /meta }}
+				{{ #hasMultipleSources }}
+					<span class="tag sources-count">{{ sources.length }}</span>
+				{{ /hasMultipleSources }}
 				</li>
 				<li class="sources">
 					<ul>
