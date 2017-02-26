@@ -125,6 +125,7 @@ function init() {
 document.body.addEventListener('keypress', event => {
 	if (String.fromCharCode(event.keyCode) === '/' && event.target.tagName !== 'INPUT') {
 		document.querySelector('#search').focus()
+		document.querySelector('#search').select()
 		event.preventDefault()
 	}
 })
