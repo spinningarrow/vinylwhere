@@ -35,7 +35,7 @@ ul {
 	background: #f9f9f9;
 }
 
-.details li {
+.details > li {
 	display: inline-block;
 }
 
