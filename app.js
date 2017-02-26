@@ -41,7 +41,6 @@ const renderData = (function () {
 
 function renderApp(data) {
 	const hasMore = renderData(data)
-	document.querySelector('#load-more').classList.toggle('hidden', !hasMore)
 }
 
 function throttle(fn, minTime) {
@@ -129,3 +128,8 @@ document.body.addEventListener('keypress', event => {
 		event.preventDefault()
 	}
 })
+
+document.addEventListener('scroll', throttle(_ => {
+	if (window.innerHeight + window.scrollY < document.body.scrollHeight - 500) return
+	renderApp()
+}, 50))
