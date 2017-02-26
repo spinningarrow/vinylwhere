@@ -94,7 +94,15 @@ function init() {
 	get('http://vinylwhere.s3-ap-southeast-1.amazonaws.com/records.grouped.json.gz')
 		.then(JSON.parse)
 		.then(records => {
-			renderApp(records)
+			if (window.location.hash) {
+				const query = window.location.hash.substring(1)
+				document.querySelector('#search').value = query
+				const queryRegexp = new RegExp(query, 'i')
+				renderApp(records.filter(r =>
+					r.artist.match(queryRegexp) || r.album.match(queryRegexp)))
+			} else {
+				renderApp(records)
+			}
 			document.body.classList.remove('loading')
 			return records
 		})
@@ -102,6 +110,7 @@ function init() {
 			let lastQuery = ''
 			const handler = _ => {
 				const query = document.querySelector('input').value
+				window.location.hash = query
 				if (query === lastQuery) return
 
 				lastQuery = query
