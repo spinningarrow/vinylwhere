@@ -1,1 +1,4 @@
 dump
+*.archive
+records.grouped.json
+records.grouped.json.gz
