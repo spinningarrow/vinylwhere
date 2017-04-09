@@ -39,71 +39,56 @@ const renderData = (function () {
 	}
 }())
 
-function renderApp(data) {
-	const hasMore = renderData(data)
+function renderApp(recordsData) {
+	recordsData.then(renderData)
 }
 
+const records = get('http://vinylwhere.s3-ap-southeast-1.amazonaws.com/records.grouped.json.gz')
+	.then(JSON.parse)
+
+const blankRecords = new Promise(resolve => resolve(Array(100).fill('')))
+
 function init() {
-	let blankRecords = Array(100).fill('')
 	document.body.classList.add('loading')
 	renderApp(blankRecords)
 
-	get('http://vinylwhere.s3-ap-southeast-1.amazonaws.com/records.grouped.json.gz')
-		.then(JSON.parse)
-		.then(records => {
-			if (window.location.hash) {
-				const query = window.location.hash.substring(1)
-				document.querySelector('#search').value = query
-				const queryRegexp = new RegExp(query, 'i')
-				renderApp(records.filter(r =>
-					r.artist.match(queryRegexp) || r.album.match(queryRegexp)))
-			} else {
-				renderApp(records)
-			}
-			document.body.classList.remove('loading')
-			return records
+	records.then(_ => document.body.classList.remove('loading'))
+
+	records.then(records => {
+		if (window.location.hash) {
+			const query = router.currentRoute()
+			document.querySelector('#search').value = query
+			const queryRegexp = new RegExp(query, 'i')
+			renderApp(new Promise(resolve => resolve(records.filter(r =>
+				r.artist.match(queryRegexp) || r.album.match(queryRegexp)))))
+		} else {
+			renderApp(new Promise(resolve => resolve(records)))
+		}
+	})
+
+	records.then(_ => {
+		let lastQuery = ''
+
+		router.onRouteChange(_ => {
+			const query = router.currentRoute()
+			if (query === lastQuery) return
+
+			document.querySelector('input').value = query
+			lastQuery = query
+
+			if (!query) return renderApp(records)
+
+			const queryRegexp = new RegExp(query, 'i')
+
+			renderApp(records.then(records => records.filter(r =>
+				r.artist.match(queryRegexp) || r.album.match(queryRegexp))))
 		})
-		.then(records => {
-			let lastQuery = ''
+	})
 
-			window.addEventListener('hashchange', _ => {
-				const query = location.hash.substring(1)
-				if (query === lastQuery) return
-
-				document.querySelector('input').value = query
-				lastQuery = query
-
-				if (!query) return renderApp(records)
-
-				const queryRegexp = new RegExp(query, 'i')
-
-				renderApp(records.filter(r =>
-					r.artist.match(queryRegexp) || r.album.match(queryRegexp)))
-			})
-		})
-		.then(records => {
-			const handler = _ => {
-				window.location.hash = document.querySelector('input').value
-			}
-			const throttledHandler = throttle(handler, 200)
-
-			document.querySelector('#search').addEventListener('keyup', throttledHandler)
-		})
-		.then(_ => {
-			document.querySelector('#search').disabled = false
-			document.querySelector('#search').focus()
-		})
+	records.then(_ => search.addHandlers().enable().focus())
 }
-
-document.body.addEventListener('keypress', event => {
-	if (String.fromCharCode(event.keyCode) === '/' && event.target.tagName !== 'INPUT') {
-		document.querySelector('#search').focus()
-		document.querySelector('#search').select()
-		event.preventDefault()
-	}
-})
 
 document.addEventListener('scroll', throttle(_ => {
 	if (window.innerHeight + window.scrollY < document.body.scrollHeight - 500) return
-	renderApp()
+	renderApp(Promise.resolve())
 }, 50))
