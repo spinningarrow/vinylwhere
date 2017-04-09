@@ -134,6 +134,7 @@ function init() {
 		})
 		.then(_ => {
 			document.querySelector('#search').disabled = false
+			document.querySelector('#search').focus()
 		})
 }
 
