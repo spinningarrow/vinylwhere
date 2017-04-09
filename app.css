@@ -5,6 +5,7 @@ body {
 }
 
 h1 {
+	cursor: pointer;
 	text-transform: lowercase;
 }
 

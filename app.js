@@ -108,18 +108,25 @@ function init() {
 		})
 		.then(records => {
 			let lastQuery = ''
-			const handler = _ => {
-				const query = document.querySelector('input').value
-				window.location.hash = query
+
+			window.addEventListener('hashchange', _ => {
+				const query = location.hash.substring(1)
 				if (query === lastQuery) return
 
+				document.querySelector('input').value = query
 				lastQuery = query
 
 				if (!query) return renderApp(records)
 
 				const queryRegexp = new RegExp(query, 'i')
+
 				renderApp(records.filter(r =>
 					r.artist.match(queryRegexp) || r.album.match(queryRegexp)))
+			})
+		})
+		.then(records => {
+			const handler = _ => {
+				window.location.hash = document.querySelector('input').value
 			}
 			const throttledHandler = throttle(handler, 200)
 
