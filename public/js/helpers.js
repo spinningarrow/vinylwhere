@@ -4,7 +4,7 @@ function throttle(fn, minTime) {
 
 	return function () {
 		if (callCount === 0) {
-			fn()
+			fn.apply(null, arguments)
 		}
 
 		if (currentTimer) {
@@ -15,7 +15,7 @@ function throttle(fn, minTime) {
 
 		currentTimer = window.setTimeout(_ => {
 			if (callCount > 1) {
-				fn()
+				fn.apply(null, arguments)
 			}
 			currentTimer = null
 			callCount = 0
