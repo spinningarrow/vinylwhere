@@ -1,9 +1,13 @@
 import { ClientFunction, Selector } from 'testcafe';
 
+const URL = process.env.NODE_ENV === 'ci' ?
+	'http://sg.vinylwhere.xyz' :
+	'http://localhost:8080'
+
 const getWindowLocation = ClientFunction(() => window.location)
 
 fixture `VinylWhere Functional Tests`
-    .page `http://localhost:8080`;
+    .page `${URL}`;
 
 test('First load contains results', async t => {
 	await t.expect(Selector("#results").innerText).contains('2046 OST Vinyl Record')

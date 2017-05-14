@@ -6,7 +6,9 @@
     "testcafe": "^0.15.0"
   },
   "scripts": {
-    "test": "testcafe chrome tests/",
+    "test": "env NODE_ENV=ci testcafe chrome,firefox tests/",
+    "test:all": "testcafe chrome,firefox,safari tests",
+    "test:chrome": "testcafe chrome tests",
     "test:firefox": "testcafe firefox tests",
     "test:safari": "testcafe safari tests"
   },
