@@ -1,0 +1,19 @@
+{
+  "name": "vinylwhere",
+  "version": "0.0.0",
+  "description": "Superfast search engine for vinyl records in Singapore.",
+  "devDependencies": {
+    "testcafe": "^0.15.0"
+  },
+  "scripts": {
+    "test": "testcafe chrome tests/",
+    "test:firefox": "testcafe firefox tests",
+    "test:safari": "testcafe safari tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/spinningarrow/vinylwhere.git"
+  },
+  "license": "ISC",
+  "homepage": "http://vinylwhere.xyz"
+}
