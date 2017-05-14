@@ -4,7 +4,7 @@ const blankRecords = new Promise(resolve => resolve(Array(100).fill('')))
 
 function init() {
 	document.body.classList.add('loading')
-	blankRecords.then(results.render)
+	blankRecords.then(resultsComponent.render)
 	records.then(_ => document.body.classList.remove('loading'))
 
 	records.then(records => {
@@ -15,9 +15,9 @@ function init() {
 			const filteredResult = records.filter(r =>
 				r.artist.match(queryRegexp) || r.album.match(queryRegexp))
 
-			results.render(filteredResult)
+			resultsComponent.render(filteredResult)
 		} else {
-			results.render(records)
+			resultsComponent.render(records)
 		}
 	})
 
@@ -28,10 +28,12 @@ function init() {
 			const query = router.currentRoute()
 			if (query === lastQuery) return
 
-			document.querySelector('input').value = query
+			document.querySelector('#search').value =
+				document.querySelector('#search').value || query
+
 			lastQuery = query
 
-			if (!query) return records.then(results.render)
+			if (!query) return records.then(resultsComponent.render)
 
 			const queryRegexp = new RegExp(query, 'i')
 
@@ -39,11 +41,11 @@ function init() {
 				.then(records =>
 					records.filter(r =>
 						r.artist.match(queryRegexp) || r.album.match(queryRegexp)))
-				.then(results.render)
+				.then(resultsComponent.render)
 		})
 	})
 
-	records.then(_ => search.addHandlers().enable().focus())
+	records.then(_ => searchComponent.addHandlers().enable().focus())
 
-	records.then(_=> results.addHandlers())
+	records.then(_=> resultsComponent.addHandlers())
 }
