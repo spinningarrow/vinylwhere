@@ -7,9 +7,9 @@ set_color normal
 mkdir -p dump/www.vinylrecords.sg
 
 set total_pages (curl -s 'http://www.vinylrecords.sg/' | \
-	pup '[title=»] json{}' | jq -r .[0].href | grep -oE \\d+)
+	pup '[title=»] json{}' | jq -r .[0].href | grep -oE [[:digit:]]+)
 
-for i in (seq $total_pages 1)
+for i in (seq $total_pages -1 1)
 	echo -n $i…
 	curl -sL "http://www.vinylrecords.sg/page/$i/" > dump/www.vinylrecords.sg/"$i.html"
 end

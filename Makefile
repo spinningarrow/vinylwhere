@@ -1,4 +1,4 @@
-SHELL:=/usr/local/bin/fish
+SHELL:=/usr/bin/env fish
 
 records.grouped.json.gz: records.grouped.json
 	gzip -c -9 records.grouped.json > records.grouped.json.gz
@@ -36,5 +36,6 @@ archive:
 	cp -r dump dump.(date).archive
 
 clean:
-	rm records.grouped.json records.grouped.json.gz
-	rm -rf dump
+	if test -e records.grouped.json; rm records.grouped.json; end
+	if test -e records.grouped.json.gz; records.grouped.json.gz; end
+	if test -e dump; rm -rf dump; end

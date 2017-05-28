@@ -9,7 +9,7 @@ mkdir -p dump/roxydischouse.com
 set total_pages (curl -s 'https://roxydischouse.com/product-category/vinyl-lp/' | \
 	pup '.page-numbers li:nth-last-child(2) a text{}')
 
-for i in (seq $total_pages 1)
+for i in (seq $total_pages -1 1)
 	echo -n $i…
 	curl -sL "https://roxydischouse.com/product-category/vinyl-lp/page/$i/" > dump/roxydischouse.com/"$i.html"
 end

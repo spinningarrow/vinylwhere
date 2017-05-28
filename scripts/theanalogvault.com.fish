@@ -9,7 +9,7 @@ mkdir -p dump/theanalogvault.com
 set total_pages (curl -s 'https://theanalogvault.com/collections/all' | \
 	pup '.pagination .position text{}' | head -1 | cut -d' ' -f4)
 
-for i in (seq $total_pages 1)
+for i in (seq $total_pages -1 1)
 	echo -n $i…
 	curl -sL "https://theanalogvault.com/collections/all?page=$i" > dump/theanalogvault.com/"$i.html"
 end
