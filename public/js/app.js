@@ -92,7 +92,7 @@ const router = {
 const Search = searchElement => ({
 	handleSearch: throttle(event => {
 		router.route(event.target.value)
-	}, 200),
+	}, 50),
 
 	handleActivation(event) {
 		if (String.fromCharCode(event.keyCode) === '/' &&
