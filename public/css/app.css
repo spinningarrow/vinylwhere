@@ -6,6 +6,7 @@ body {
 
 h1 {
 	cursor: pointer;
+	margin-bottom: 0;
 	text-transform: lowercase;
 }
 
@@ -13,6 +14,11 @@ h1 span {
 	border-left: 4px solid #ff9f66;
 	margin-left: 0.1em;
 	padding-left: 0.1em;
+}
+
+header p {
+	font-size: x-small;
+	margin-top: 0;
 }
 
 a {

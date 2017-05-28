@@ -34,7 +34,10 @@ function get(url, method) {
 		httpRequest.onreadystatechange = _ => {
 			if (httpRequest.readyState === XMLHttpRequest.DONE) {
 				if (httpRequest.status === 200) {
-					resolve(httpRequest.responseText)
+					resolve({
+						lastModified: httpRequest.getResponseHeader('last-modified'),
+						body: JSON.parse(httpRequest.responseText)
+					})
 				} else {
 					reject(httpRequest)
 				}
@@ -43,6 +46,27 @@ function get(url, method) {
 		httpRequest.open(method || 'GET', url)
 		httpRequest.send()
 	})
+}
+
+function timeago(date) {
+	const now = new Date()
+	const seconds = (now - date) / 1000
+	if (seconds < 60) return pluralise(seconds, 'second')
+
+	const minutes = seconds / 60
+	if (minutes < 60) return pluralise(minutes, 'minute')
+
+	const hours = minutes / 60
+	if (hours < 60) return pluralise(hours, 'hour')
+
+	const days = hours / 60
+	return pluralise(days, 'day')
+}
+
+function pluralise(count, word) {
+	count = Math.floor(count)
+	if (count === 1) return `${count} ${word}`
+	return `${count} ${word}s`
 }
 // }}}
 
@@ -96,6 +120,20 @@ const Search = searchElement => ({
 		return this
 	}
 })
+// }}}
+
+// ---- lastUpdated ----
+// {{{
+const LastUpdated = lastUpdatedElement => {
+	return {
+		render() {
+			lastModified.then(lastModifiedDate => {
+				lastUpdatedElement.querySelector('time').innerText = timeago(lastModifiedDate)
+				lastUpdatedElement.classList.remove('hidden')
+			})
+		}
+	}
+}
 // }}}
 
 // ---- results ----
@@ -163,8 +201,9 @@ const Results = (resultsElement, templateElement) => {
 
 // ---- app ----
 // {{{
-const records = get('http://vinylwhere.s3-ap-southeast-1.amazonaws.com/records.grouped.json.gz')
-	.then(JSON.parse)
+const fetchedData = get('http://vinylwhere.s3-ap-southeast-1.amazonaws.com/records.grouped.json.gz')
+const records = fetchedData.then(data => data.body)
+const lastModified = fetchedData.then(data => new Date(data.lastModified))
 const blankRecords = Promise.resolve(Array(100).fill(''))
 
 function init() {
@@ -211,7 +250,7 @@ function init() {
 	})
 
 	records.then(_ => searchComponent.addHandlers().enable().focus())
-
 	records.then(_=> resultsComponent.addHandlers())
+	lastModified.then(_ => lastUpdatedComponent.render())
 }
 // }}}

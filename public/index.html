@@ -8,7 +8,10 @@
 	<link rel="stylesheet" href="css/app.css">
 </head>
 <body>
-	<h1 onclick="location.hash=''">Vinyl<span>Where</span></h1>
+	<header>
+		<h1 onclick="location.hash=''">Vinyl<span>Where</span></h1>
+		<p id="last-updated" class="hidden">updated <time></time> ago</p>
+	</header>
 
 	<p><input placeholder="Search for an artist or album" id="search" disabled></p>
 
@@ -48,6 +51,7 @@
 		const searchComponent = Search(document.querySelector('#search'))
 		const resultsComponent = Results(document.querySelector('#results'),
 			document.querySelector('#template'))
+		const lastUpdatedComponent = LastUpdated(document.querySelector('#last-updated'))
 		init()
 	</script>
 
