@@ -57,9 +57,9 @@ function timeago(date) {
 	if (minutes < 60) return pluralise(minutes, 'minute')
 
 	const hours = minutes / 60
-	if (hours < 60) return pluralise(hours, 'hour')
+	if (hours < 24) return pluralise(hours, 'hour')
 
-	const days = hours / 60
+	const days = hours / 24
 	return pluralise(days, 'day')
 }
 
