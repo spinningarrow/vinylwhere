@@ -37,5 +37,5 @@ archive:
 
 clean:
 	if test -e records.grouped.json; rm records.grouped.json; end
-	if test -e records.grouped.json.gz; records.grouped.json.gz; end
+	if test -e records.grouped.json.gz; rm records.grouped.json.gz; end
 	if test -e dump; rm -rf dump; end
