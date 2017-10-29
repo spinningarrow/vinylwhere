@@ -56,7 +56,7 @@ const SearchResults = {
 		return m('ul', data
 			.filter(({ artist }) => artist.toLowerCase().indexOf(query) !== -1)
 			.slice(0, 100)
-			.map(({ artist, album, sources }) => m('li', [
+			.map(({ artist, album, sources }) => m('li', {key: artist + album }, [
 				m('p', `${artist} - ${album}`),
 				m('ul', sources.map(source => m('li', m('a', { href: source.url, target: '_blank' }, source.name)))),
 			]))
