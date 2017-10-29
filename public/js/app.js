@@ -16,9 +16,20 @@ const SearchBar = {
 	}
 }
 
+const RecentlyAdded = {
+	view() {
+		return m('div', [
+			m('button', { onclick() { data = fetchedData.recent } }, 'Show recently added'),
+			m('button', { onclick() { data = fetchedData.all } }, 'Show all'),
+		])
+	}
+}
+
 let data = []
+let fetchedData = null
 m.request({ method: 'GET', url: '/result.json' })
 	.then(response => {
+		fetchedData = response
 		data = response.all
 	})
 
@@ -59,6 +70,7 @@ m.route(root, '/', {
 		render() {
 			return m('div', [
 				m(SearchBar),
+				m(RecentlyAdded),
 				m(SearchResults),
 			])
 		}
