@@ -69,12 +69,12 @@ m.route(root, '/', {
 	'/': {
 		render() {
 			return m('div', [
+				m(LastUpdated),
 				m(SearchBar),
 				m(RecentlyAdded),
 				m(SearchResults),
 			])
 		}
 	},
-	'/updated': LastUpdated,
 	'/about': About,
 })
