@@ -26,8 +26,12 @@ const SearchResults = {
 	view() {
 		return m('ul', data
 			.filter(({ artist }) => artist.toLowerCase().indexOf(query) !== -1)
-			// .slice(0, 100)
-			.map(({ artist, album }) => m('li', `${artist} - ${album}`)))
+			.slice(0, 100)
+			.map(({ artist, album, sources }) => m('li', [
+				m('p', `${artist} - ${album}`),
+				m('ul', sources.map(source => m('li', m('a', { href: source, target: '_blank' }, source)))),
+			]))
+		)
 	}
 }
 
