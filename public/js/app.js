@@ -11,7 +11,6 @@ const SearchBar = {
 				})
 			}),
 			m('button', { type: 'reset' }, 'reset'),
-			m('p', `Current search query: ${query}`)
 		])
 	}
 }
@@ -28,7 +27,6 @@ const RecentlyAdded = {
 let data = []
 let fetchedData = null
 let lastModified = null
-// .getResponseHeader('last-modified')
 m.request({
 	method: 'GET',
 	url: '/result.json',
