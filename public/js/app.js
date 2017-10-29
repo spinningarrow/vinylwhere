@@ -37,7 +37,7 @@ let fetchedData = null
 let lastModified = null
 m.request({
 	method: 'GET',
-	url: '/result.json',
+	url: '/result-rich.json',
 	extract(xhr) {
 		return {
 			lastModified: new Date(xhr.getResponseHeader('last-modified')),
@@ -58,7 +58,7 @@ const SearchResults = {
 			.slice(0, 100)
 			.map(({ artist, album, sources }) => m('li', [
 				m('p', `${artist} - ${album}`),
-				m('ul', sources.map(source => m('li', m('a', { href: source, target: '_blank' }, source)))),
+				m('ul', sources.map(source => m('li', m('a', { href: source.url, target: '_blank' }, source.name)))),
 			]))
 		)
 	}
