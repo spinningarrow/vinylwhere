@@ -27,11 +27,23 @@ const RecentlyAdded = {
 
 let data = []
 let fetchedData = null
-m.request({ method: 'GET', url: '/result.json' })
-	.then(response => {
-		fetchedData = response
-		data = response.all
-	})
+let lastModified = null
+// .getResponseHeader('last-modified')
+m.request({
+	method: 'GET',
+	url: '/result.json',
+	extract(xhr) {
+		return {
+			lastModified: new Date(xhr.getResponseHeader('last-modified')),
+			bodyJson: JSON.parse(xhr.responseText),
+		}
+	}
+})
+.then(response => {
+	fetchedData = response.bodyJson
+	lastModified = response.lastModified
+	data = fetchedData.all
+})
 
 const SearchResults = {
 	view() {
@@ -50,7 +62,7 @@ const LastUpdated = {
 	view() {
 		return m('span', [
 			'Last updated at ',
-			m('time', new Date().toDateString()),
+			m('time', lastModified && lastModified.toDateString()),
 		])
 	}
 }
