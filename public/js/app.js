@@ -1,21 +1,5 @@
 const root = document.querySelector('#app')
 
-let count = 0
-const App = {
-	view() {
-		return m('main', [
-			m('h1', { class: 'title' }, 'my first app'),
-			m('button', { onclick() { count++ } }, `${count} clicks`),
-		])
-	}
-}
-
-const Splash = {
-	view() {
-		return m('a', { href: '#!/hello' }, 'open sesame!')
-	}
-}
-
 let query = ''
 const SearchBar = {
 	view() {
@@ -56,10 +40,17 @@ const LastUpdated = {
 	}
 }
 
+const About = {
+	view() {
+		return m('div', [
+			m('h2', 'About'),
+			m('p', `VinylWhere is a ridiculously fast search engine for vinyl
+				records in Singapore`),
+		])
+	}
+}
+
 m.route(root, '/', {
-	'/splash': Splash,
-	'/hello': App,
-	'/search': SearchBar,
 	'/': {
 		render() {
 			return m('div', [
@@ -69,4 +60,5 @@ m.route(root, '/', {
 		}
 	},
 	'/updated': LastUpdated,
+	'/about': About,
 })
