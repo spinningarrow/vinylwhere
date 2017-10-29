@@ -44,7 +44,8 @@ let fetchedData = null
 let lastModified = null
 m.request({
 	method: 'GET',
-	url: '/result-rich.json',
+	// url: '/result-rich.json',
+	url: 'http://vinylwhere.s3-ap-southeast-1.amazonaws.com/dev/result-rich.json',
 	extract(xhr) {
 		return {
 			lastModified: new Date(xhr.getResponseHeader('last-modified')),
