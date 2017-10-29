@@ -20,13 +20,20 @@ const RecentlyAdded = {
 	view() {
 		return m('div', [
 			m('button', { onclick() { data = fetchedData.recent } }, 'Show recently added'),
-			m('button', { onclick() {
-				const allDataLength = fetchedData.all.length
-				const randomIndices = Array(100).fill().map(() =>
-					Math.floor(Math.random() * allDataLength))
+			m('button', {
+				onclick() {
+					const allDataLength = fetchedData.all.length
+					const randomIndices = Array(100).fill().map(() =>
+						Math.floor(Math.random() * allDataLength))
 
-				data = randomIndices.map(index => fetchedData.all[index])
-			} }, 'Random 100'),
+					data = randomIndices.map(index => fetchedData.all[index])
+				}
+			}, 'Random 100'),
+			m('button', {
+				onclick() {
+					data = fetchedData.all.filter(({ sources }) => sources.filter(source => source.name === 'theanalogvault' && source.url).length )
+				}
+			}, 'theanalogvault only'),
 			m('button', { onclick() { data = fetchedData.all } }, 'Show all'),
 		])
 	}
