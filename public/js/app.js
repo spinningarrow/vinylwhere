@@ -5,6 +5,7 @@ const SearchBar = {
 	view() {
 		return m('form', [
 			m('input', {
+				autofocus: true,
 				placeholder: 'artist or album name',
 				oninput: m.withAttr('value', value => {
 					query = value.toLowerCase()
