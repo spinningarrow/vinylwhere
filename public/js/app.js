@@ -1,29 +1,5 @@
 const root = document.querySelector('#app')
 
-const state = {
-	query: '',
-	data: [],
-	fetchedData: { recent: [], all: [] },
-	lastModified: null,
-}
-
-m.request({
-	method: 'GET',
-	// url: '/result-rich.json',
-	url: 'https://vinylwhere.s3-ap-southeast-1.amazonaws.com/dev/result-rich.json',
-	extract(xhr) {
-		return {
-			lastModified: new Date(xhr.getResponseHeader('last-modified')),
-			bodyJson: JSON.parse(xhr.responseText),
-		}
-	}
-})
-.then(response => {
-	state.fetchedData = response.bodyJson
-	state.lastModified = response.lastModified
-	state.data = state.fetchedData.all
-})
-
 const SearchBar = {
 	view({ attrs: { update } }) {
 		return m('form', [
@@ -95,7 +71,31 @@ const About = {
 }
 
 const App = {
-	view() {
+	query: '',
+	data: [],
+	fetchedData: { recent: [], all: [] },
+	lastModified: null,
+
+	oninit({ state }) {
+		m.request({
+			method: 'GET',
+			// url: '/result-rich.json',
+			url: 'https://vinylwhere.s3-ap-southeast-1.amazonaws.com/dev/result-rich.json',
+			extract(xhr) {
+				return {
+					lastModified: new Date(xhr.getResponseHeader('last-modified')),
+					bodyJson: JSON.parse(xhr.responseText),
+				}
+			}
+		})
+		.then(response => {
+			state.fetchedData = response.bodyJson
+			state.lastModified = response.lastModified
+			state.data = state.fetchedData.all
+		})
+	},
+
+	view({ state }) {
 		return m('div', [
 			m(LastUpdated, { lastUpdated: state.lastModified }),
 			m(SearchBar, { update: value => state.query = value }),
