@@ -1,47 +1,12 @@
 const root = document.querySelector('#app')
 
-let query = ''
-const SearchBar = {
-	view() {
-		return m('form', [
-			m('input', {
-				autofocus: true,
-				placeholder: 'artist or album name',
-				oninput: m.withAttr('value', value => {
-					query = value.toLowerCase()
-				})
-			}),
-			m('button', { type: 'reset' }, 'reset'),
-		])
-	}
+const state = {
+	query: '',
+	data: [],
+	fetchedData: { recent: [], all: [] },
+	lastModified: null,
 }
 
-const RecentlyAdded = {
-	view() {
-		return m('div', [
-			m('button', { onclick() { data = fetchedData.recent } }, 'Show recently added'),
-			m('button', {
-				onclick() {
-					const allDataLength = fetchedData.all.length
-					const randomIndices = Array(100).fill().map(() =>
-						Math.floor(Math.random() * allDataLength))
-
-					data = randomIndices.map(index => fetchedData.all[index])
-				}
-			}, 'Random 100'),
-			m('button', {
-				onclick() {
-					data = fetchedData.all.filter(({ sources }) => sources.filter(source => source.name === 'theanalogvault' && source.url).length )
-				}
-			}, 'theanalogvault only'),
-			m('button', { onclick() { data = fetchedData.all } }, 'Show all'),
-		])
-	}
-}
-
-let data = []
-let fetchedData = null
-let lastModified = null
 m.request({
 	method: 'GET',
 	// url: '/result-rich.json',
@@ -54,13 +19,51 @@ m.request({
 	}
 })
 .then(response => {
-	fetchedData = response.bodyJson
-	lastModified = response.lastModified
-	data = fetchedData.all
+	state.fetchedData = response.bodyJson
+	state.lastModified = response.lastModified
+	state.data = state.fetchedData.all
 })
 
+const SearchBar = {
+	view({ attrs: { update } }) {
+		return m('form', [
+			m('input', {
+				autofocus: true,
+				placeholder: 'artist or album name',
+				oninput: m.withAttr('value', value => {
+					update(value.toLowerCase())
+				})
+			}),
+			m('button', { type: 'reset' }, 'reset'),
+		])
+	}
+}
+
+const RecentlyAdded = {
+	view({ attrs: { update, fetchedData: { recent, all } } }) {
+		return m('div', [
+			m('button', { onclick() { update(recent) } }, 'Show recently added'),
+			m('button', {
+				onclick() {
+					const allDataLength = all.length
+					const randomIndices = Array(100).fill().map(() =>
+						Math.floor(Math.random() * allDataLength))
+
+					update(randomIndices.map(index => all[index]))
+				}
+			}, 'Random 100'),
+			m('button', {
+				onclick() {
+					update(all.filter(({ sources }) => sources.filter(source => source.name === 'theanalogvault' && source.url).length ))
+				}
+			}, 'theanalogvault only'),
+			m('button', { onclick() { update(all) } }, 'Show all'),
+		])
+	}
+}
+
 const SearchResults = {
-	view() {
+	view({ attrs: { data, query }}) {
 		return m('ul', data
 			.filter(({ artist }) => artist.toLowerCase().indexOf(query) !== -1)
 			.slice(0, 100)
@@ -73,10 +76,10 @@ const SearchResults = {
 }
 
 const LastUpdated = {
-	view() {
+	view({ attrs: { lastUpdated }}) {
 		return m('span', [
 			'Last updated at ',
-			m('time', lastModified && lastModified.toDateString()),
+			m('time', lastUpdated && lastUpdated.toDateString()),
 		])
 	}
 }
@@ -91,16 +94,18 @@ const About = {
 	}
 }
 
+const App = {
+	view() {
+		return m('div', [
+			m(LastUpdated, { lastUpdated: state.lastModified }),
+			m(SearchBar, { update: value => state.query = value }),
+			m(RecentlyAdded, { update: value => state.data = value, fetchedData: state.fetchedData }),
+			m(SearchResults, { data: state.data, query: state.query }),
+		])
+	}
+}
+
 m.route(root, '/', {
-	'/': {
-		render() {
-			return m('div', [
-				m(LastUpdated),
-				m(SearchBar),
-				m(RecentlyAdded),
-				m(SearchResults),
-			])
-		}
-	},
+	'/': App,
 	'/about': About,
 })
