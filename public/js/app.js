@@ -41,21 +41,21 @@ const RecentlyAdded = {
 const SearchResults = {
 	filteredData: [],
 	paginatedData: [],
-	pagesCount: 1,
+	pages: 1,
 
 	handleScroll() {
 		if (window.innerHeight + window.scrollY < document.body.scrollHeight - 500) {
 			return
 		}
 
-		this.pagesCount++
+		this.pages++
 
-		m.route.set('/', { pagesCount: this.pagesCount })
+		m.route.set('/', { pages: this.pages })
 	},
 
 	oninit() {
 		this.handleScroll = this.handleScroll.bind(this)
-		this.pagesCount = +m.route.param('pagesCount') || this.pagesCount
+		this.pages = +m.route.param('pages') || this.pages
 
 		document.addEventListener('scroll', this.handleScroll)
 	},
@@ -67,11 +67,11 @@ const SearchResults = {
 	view({ attrs: { data, query, pageSize }, state }) {
 		state.filteredData = data.filter(({ artist }) =>
 			artist.toLowerCase().indexOf(query) !== -1)
-		state.paginatedData = state.filteredData.slice(0, pageSize * state.pagesCount)
+		state.paginatedData = state.filteredData.slice(0, pageSize * state.pages)
 
 		return m('div', [
-			m('button', { onclick() { state.pagesCount++ } }, 'extend'),
-			m('p', state.pagesCount),
+			m('button', { onclick() { state.pages++ } }, 'extend'),
+			m('p', state.pages),
 			m('ul', state.paginatedData
 			.map(({ artist, album, sources }) => m('li', {key: artist + album }, [
 				m('p', `${artist} - ${album}`),
