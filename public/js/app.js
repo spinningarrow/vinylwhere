@@ -39,15 +39,45 @@ const RecentlyAdded = {
 }
 
 const SearchResults = {
-	view({ attrs: { data, query }}) {
-		return m('ul', data
-			.filter(({ artist }) => artist.toLowerCase().indexOf(query) !== -1)
-			.slice(0, 100)
+	filteredData: [],
+	paginatedData: [],
+	pagesCount: 1,
+
+	handleScroll() {
+		if (window.innerHeight + window.scrollY < document.body.scrollHeight - 500) {
+			return
+		}
+
+		this.pagesCount++
+
+		m.route.set('/', { pagesCount: this.pagesCount })
+	},
+
+	oninit() {
+		this.handleScroll = this.handleScroll.bind(this)
+		this.pagesCount = +m.route.param('pagesCount') || this.pagesCount
+
+		document.addEventListener('scroll', this.handleScroll)
+	},
+
+	onremove() {
+		document.removeEventListener('scroll', this.handleScroll)
+	},
+
+	view({ attrs: { data, query, pageSize }, state }) {
+		state.filteredData = data.filter(({ artist }) =>
+			artist.toLowerCase().indexOf(query) !== -1)
+		state.paginatedData = state.filteredData.slice(0, pageSize * state.pagesCount)
+
+		return m('div', [
+			m('button', { onclick() { state.pagesCount++ } }, 'extend'),
+			m('p', state.pagesCount),
+			m('ul', state.paginatedData
 			.map(({ artist, album, sources }) => m('li', {key: artist + album }, [
 				m('p', `${artist} - ${album}`),
 				m('ul', sources.map(source => m('li', m('a', { href: source.url, target: '_blank' }, source.name)))),
 			]))
-		)
+		)])
 	}
 }
 
@@ -100,7 +130,7 @@ const App = {
 			m(LastUpdated, { lastUpdated: state.lastModified }),
 			m(SearchBar, { update: value => state.query = value }),
 			m(RecentlyAdded, { update: value => state.data = value, fetchedData: state.fetchedData }),
-			m(SearchResults, { data: state.data, query: state.query }),
+			m(SearchResults, { data: state.data, query: state.query, pageSize: 1 }),
 		])
 	}
 }
