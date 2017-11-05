@@ -130,7 +130,7 @@ const App = {
 			m(LastUpdated, { lastUpdated: state.lastModified }),
 			m(SearchBar, { update: value => state.query = value }),
 			m(RecentlyAdded, { update: value => state.data = value, fetchedData: state.fetchedData }),
-			m(SearchResults, { data: state.data, query: state.query, pageSize: 1 }),
+			m(SearchResults, { data: state.data, query: state.query, pageSize: 10 }),
 		])
 	}
 }
