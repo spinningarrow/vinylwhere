@@ -135,6 +135,7 @@ const App = {
 	}
 }
 
+m.route.prefix('')
 m.route(root, '/', {
 	'/': App,
 	'/about': About,
