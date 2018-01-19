@@ -201,7 +201,7 @@ const Results = (resultsElement, templateElement) => {
 
 // ---- app ----
 // {{{
-const fetchedData = get('http://vinylwhere.s3-ap-southeast-1.amazonaws.com/records.grouped.json.gz')
+const fetchedData = get('//vinylwhere.s3-ap-southeast-1.amazonaws.com/records.grouped.json.gz')
 const records = fetchedData.then(data => data.body)
 const lastModified = fetchedData.then(data => new Date(data.lastModified))
 const blankRecords = Promise.resolve(Array(100).fill(''))
