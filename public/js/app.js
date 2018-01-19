@@ -1,11 +1,12 @@
 const root = document.querySelector('#app')
 
 const SearchBar = {
-	view({ attrs: { update } }) {
+	view({ attrs: { query, update } }) {
 		return m('form', [
 			m('input', {
 				autofocus: true,
 				placeholder: 'artist or album name',
+				defaultValue: query,
 				oninput: m.withAttr('value', value => {
 					update(value.toLowerCase())
 				})
@@ -50,7 +51,7 @@ const SearchResults = {
 
 		this.pages++
 
-		m.route.set('/', { pages: this.pages })
+		m.route.set(m.route.get(), { pages: this.pages })
 	},
 
 	oninit() {
@@ -101,7 +102,6 @@ const About = {
 }
 
 const App = {
-	query: '',
 	data: [],
 	fetchedData: { recent: [], all: [] },
 	lastModified: null,
@@ -128,9 +128,9 @@ const App = {
 	view({ state }) {
 		return m('div', [
 			m(LastUpdated, { lastUpdated: state.lastModified }),
-			m(SearchBar, { update: value => state.query = value }),
+			m(SearchBar, { query: m.route.param('q') || '', update: value => m.route.set(m.route.get(), { q: value }) }),
 			m(RecentlyAdded, { update: value => state.data = value, fetchedData: state.fetchedData }),
-			m(SearchResults, { data: state.data, query: state.query, pageSize: 10 }),
+			m(SearchResults, { data: state.data, query: m.route.param('q') || '', pageSize: 10 }),
 		])
 	}
 }

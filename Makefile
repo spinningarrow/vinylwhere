@@ -1,4 +1,4 @@
 .PHONY: start
 
 start:
-	live-server public/
+	npx live-server public/
