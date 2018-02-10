@@ -8,19 +8,19 @@ records.grouped.json: dump/all.json
 
 dump/all.json: dump/theanalogvault.com/all.json dump/roxydischouse.com/all.json dump/www.vinylrecords.sg/all.json
 	jq 'flatten' -s \
-		(theanalogvault.com.js ../dump/theanalogvault.com/all.json | psub) \
-		(roxydischouse.com.js ../dump/roxydischouse.com/all.json | psub) \
-		(www.vinylrecords.sg.js ../dump/www.vinylrecords.sg/all.json | psub) \
+		(./theanalogvault.com.js ../dump/theanalogvault.com/all.json | psub) \
+		(./roxydischouse.com.js ../dump/roxydischouse.com/all.json | psub) \
+		(./www.vinylrecords.sg.js ../dump/www.vinylrecords.sg/all.json | psub) \
 		> dump/all.json
 
 dump/theanalogvault.com/all.json:
-	theanalogvault.com.fish
+	./theanalogvault.com.fish
 
 dump/roxydischouse.com/all.json:
-	roxydischouse.com.fish
+	./roxydischouse.com.fish
 
 dump/www.vinylrecords.sg/all.json:
-	www.vinylrecords.sg.fish
+	./www.vinylrecords.sg.fish
 
 upload: records.grouped.json.gz
 	aws s3 cp s3://vinylwhere/records.grouped.json.gz \
