@@ -23,9 +23,9 @@ dump/all.json: dump/theanalogvault.com/all.json dump/roxydischouse.com/all.json 
 	ls -al dump
 	ls -al dump/theanalogvault.com
 	jq 'flatten' -s \
-		(./theanalogvault.com.js dump/theanalogvault.com/all.json | psub) \
-		(./roxydischouse.com.js dump/roxydischouse.com/all.json | psub) \
-		(./www.vinylrecords.sg.js dump/www.vinylrecords.sg/all.json | psub) \
+		(./theanalogvault.com.js ./dump/theanalogvault.com/all.json | psub) \
+		(./roxydischouse.com.js ./dump/roxydischouse.com/all.json | psub) \
+		(./www.vinylrecords.sg.js ./dump/www.vinylrecords.sg/all.json | psub) \
 		> dump/all.json
 
 dump/theanalogvault.com/all.json:
