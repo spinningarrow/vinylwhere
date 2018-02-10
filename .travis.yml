@@ -14,8 +14,6 @@ addons:
     packages:
      - google-chrome-stable
      - fluxbox
-     - fish
-     - jq
 
 before_script:
   - "export DISPLAY=:99.0"
