@@ -4,7 +4,7 @@ DAY_OF_WEEK := $(shell date +%u)
 
 travis:
 	if [ "${TRAVIS_EVENT_TYPE}" = "cron" ]; then\
-		$(MAKE) --direcotry=scraper start;\
+		$(MAKE) --directory=scraper all upload;\
 	else\
-		npm test;\
+		$(MAKE) --directory=scraper test && npm test;\
 	fi

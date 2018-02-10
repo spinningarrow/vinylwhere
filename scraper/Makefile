@@ -1,6 +1,8 @@
 SHELL:=/usr/bin/env fish
 
-.PHONY: upload test
+.PHONY: all upload test
+
+all: records.grouped.json.gz
 
 records.grouped.json.gz: records.grouped.json
 	gzip -c -9 records.grouped.json > records.grouped.json.gz
