@@ -19,6 +19,7 @@ records.grouped.json: dump/all.json
 	group.js dump/all.json | jq 'sort_by(.artist)' > records.grouped.json
 
 dump/all.json: dump/theanalogvault.com/all.json dump/roxydischouse.com/all.json dump/www.vinylrecords.sg/all.json
+	ls -al
 	jq 'flatten' -s \
 		(./theanalogvault.com.js dump/theanalogvault.com/all.json | psub) \
 		(./roxydischouse.com.js dump/roxydischouse.com/all.json | psub) \
