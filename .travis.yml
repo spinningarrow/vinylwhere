@@ -1,4 +1,4 @@
-language: node_js
+language: nix
 node_js: "stable"
 dist: trusty
 sudo: required
@@ -16,7 +16,6 @@ addons:
      - fluxbox
      - fish
      - jq
-     - pup
 
 before_script:
   - "export DISPLAY=:99.0"
@@ -25,4 +24,4 @@ before_script:
   - fluxbox >/dev/null 2>&1 &
 
 script:
-  make travis
+  nix-shell --run 'make travis'
