@@ -16,7 +16,7 @@ records.grouped.json.gz: records.grouped.json
 	gzip -c -9 records.grouped.json > records.grouped.json.gz
 
 records.grouped.json: dump/all.json
-	group.js dump/all.json | jq 'sort_by(.artist)' > records.grouped.json
+	./group.js dump/all.json | jq 'sort_by(.artist)' > records.grouped.json
 
 dump/all.json: dump/theanalogvault.com/all.json dump/roxydischouse.com/all.json dump/www.vinylrecords.sg/all.json
 	ls -al
