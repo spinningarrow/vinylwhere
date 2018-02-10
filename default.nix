@@ -8,5 +8,6 @@ in pkgs.stdenv.mkDerivation rec {
     jq
     nodejs-9_x
     pup
+    awscli
   ];
 }

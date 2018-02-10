@@ -1,5 +1,17 @@
 SHELL:=/usr/bin/env fish
 
+.PHONY: upload
+
+upload: records.grouped.json.gz
+	aws s3 cp s3://vinylwhere/records.grouped.json.gz \
+		s3://vinylwhere/records.grouped.json.gz.(date "+%Y%m%d%H%M%S")
+	aws s3 cp \
+		--acl=public-read \
+		--content-type=application/json \
+		--content-encoding=gzip \
+		records.grouped.json.gz \
+		s3://vinylwhere/
+
 records.grouped.json.gz: records.grouped.json
 	gzip -c -9 records.grouped.json > records.grouped.json.gz
 
@@ -21,16 +33,6 @@ dump/roxydischouse.com/all.json:
 
 dump/www.vinylrecords.sg/all.json:
 	./www.vinylrecords.sg.fish
-
-# upload: records.grouped.json.gz
-# 	aws s3 cp s3://vinylwhere/records.grouped.json.gz \
-# 		s3://vinylwhere/records.grouped.json.gz.(date "+%Y%m%d%H%M%S")
-# 	aws s3 cp \
-# 		--acl=public-read \
-# 		--content-type=application/json \
-# 		--content-encoding=gzip \
-# 		records.grouped.json.gz \
-# 		s3://vinylwhere/
 
 archive:
 	cp -r dump dump.(date).archive
