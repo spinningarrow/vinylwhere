@@ -1,5 +1,4 @@
 language: nix
-node_js: "stable"
 dist: trusty
 sudo: required
 
@@ -10,10 +9,10 @@ addons:
   firefox: latest
   apt:
     sources:
-     - google-chrome
+      - google-chrome
     packages:
-     - google-chrome-stable
-     - fluxbox
+      - google-chrome-stable
+      - fluxbox
 
 before_script:
   - "export DISPLAY=:99.0"
