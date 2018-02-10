@@ -6,6 +6,7 @@
     "testcafe": "^0.15.0"
   },
   "scripts": {
+    "pretest": "which testcafe || npm install",
     "test": "env NODE_ENV=ci testcafe chrome,firefox tests/",
     "test:all": "testcafe chrome,firefox,safari tests",
     "test:chrome": "testcafe chrome tests",
