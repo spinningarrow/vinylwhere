@@ -4,14 +4,17 @@ set_color bryellow
 echo roxydischouse.com
 set_color normal
 
+set HOSTNAME 'https://theanalogvault.com'
+test "$SCRAPER_ENV" = "test"; and set HOSTNAME 'http://localhost:9002'
+
 mkdir -p dump/roxydischouse.com
 
-set total_pages (curl -s 'https://roxydischouse.com/product-category/vinyl-lp/' | \
+set total_pages (curl -s "$HOSTNAME/product-category/vinyl-lp/" | \
 	pup '.page-numbers li:nth-last-child(2) a text{}')
 
 for i in (seq $total_pages -1 1)
 	echo -n $i…
-	curl -sL "https://roxydischouse.com/product-category/vinyl-lp/page/$i/" > dump/roxydischouse.com/"$i.html"
+	curl -sL "$HOSTNAME/product-category/vinyl-lp/page/$i/" > dump/roxydischouse.com/"$i.html"
 end
 
 for i in (ls dump/roxydischouse.com/*.html)

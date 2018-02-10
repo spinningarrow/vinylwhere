@@ -1,16 +1,6 @@
 SHELL:=/usr/bin/env fish
 
-.PHONY: upload
-
-upload: records.grouped.json.gz
-	aws s3 cp s3://vinylwhere/records.grouped.json.gz \
-		s3://vinylwhere/records.grouped.json.gz.(date "+%Y%m%d%H%M%S")
-	aws s3 cp \
-		--acl=public-read \
-		--content-type=application/json \
-		--content-encoding=gzip \
-		records.grouped.json.gz \
-		s3://vinylwhere/
+.PHONY: upload test
 
 records.grouped.json.gz: records.grouped.json
 	gzip -c -9 records.grouped.json > records.grouped.json.gz
@@ -36,6 +26,21 @@ dump/www.vinylrecords.sg/all.json:
 
 archive:
 	cp -r dump dump.(date).archive
+
+test:
+	cd test/; and caddy -pidfile caddy.pid &
+	env SCRAPER_ENV=test $(MAKE)
+	kill (cat test/caddy.pid)
+
+upload: records.grouped.json.gz
+	aws s3 cp s3://vinylwhere/records.grouped.json.gz \
+		s3://vinylwhere/records.grouped.json.gz.(date "+%Y%m%d%H%M%S")
+	aws s3 cp \
+		--acl=public-read \
+		--content-type=application/json \
+		--content-encoding=gzip \
+		records.grouped.json.gz \
+		s3://vinylwhere/
 
 clean:
 	if test -e records.grouped.json; rm records.grouped.json; end

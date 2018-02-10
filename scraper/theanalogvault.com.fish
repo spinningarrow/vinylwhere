@@ -4,14 +4,17 @@ set_color bryellow
 echo theanalogvault.com
 set_color normal
 
+set HOSTNAME 'https://theanalogvault.com'
+test "$SCRAPER_ENV" = "test"; and set HOSTNAME 'http://localhost:9001'
+
 mkdir -p dump/theanalogvault.com
 
-set total_pages (curl -s 'https://theanalogvault.com/collections/all' | \
+set total_pages (curl -s "$HOSTNAME/collections/all" | \
 	pup '.pagination .position text{}' | head -1 | cut -d' ' -f4)
 
 for i in (seq $total_pages -1 1)
 	echo -n $i…
-	curl -sL "https://theanalogvault.com/collections/all?page=$i" > dump/theanalogvault.com/"$i.html"
+	curl -sL "$HOSTNAME/collections/all?page=$i" > dump/theanalogvault.com/"$i.html"
 end
 
 for i in (ls dump/theanalogvault.com/*.html)

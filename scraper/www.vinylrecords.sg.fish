@@ -4,14 +4,17 @@ set_color bryellow
 echo www.vinylrecords.sg
 set_color normal
 
+set HOSTNAME 'https://theanalogvault.com'
+test "$SCRAPER_ENV" = "test"; and set HOSTNAME 'http://localhost:9003'
+
 mkdir -p dump/www.vinylrecords.sg
 
-set total_pages (curl -s 'http://www.vinylrecords.sg/' | \
+set total_pages (curl -s "$HOSTNAME/" | \
 	pup '[title=»] json{}' | jq -r .[0].href | grep -oE [[:digit:]]+)
 
 for i in (seq $total_pages -1 1)
 	echo -n $i…
-	curl -sL "http://www.vinylrecords.sg/page/$i/" > dump/www.vinylrecords.sg/"$i.html"
+	curl -sL "$HOSTNAME/page/$i/" > dump/www.vinylrecords.sg/"$i.html"
 end
 
 for i in (ls dump/www.vinylrecords.sg/*.html)

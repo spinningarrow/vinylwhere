@@ -1,0 +1,27 @@
+localhost:9001 {
+	tls off
+	root ./theanalogvault.com
+	rewrite /collections/all {
+		to /all{?page}
+	}
+}
+
+localhost:9002 {
+	tls off
+	root ./roxydischouse.com
+	rewrite /product-category/vinyl-lp/ /vinyl-lp
+	rewrite /product-category/vinyl-lp/page/ {
+		regexp (\d+)/$
+		to /vinyl-lp{1}
+	}
+}
+
+localhost:9003 {
+	tls off
+	root ./www.vinylrecords.sg
+	rewrite / /home
+	rewrite /page/ {
+		regexp (\d+)/$
+		to /p{1}
+	}
+}
