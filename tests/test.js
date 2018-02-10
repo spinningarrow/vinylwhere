@@ -1,7 +1,7 @@
 import { ClientFunction, Selector } from 'testcafe';
 
 const URL = process.env.NODE_ENV === 'ci' ?
-	'http://sg.vinylwhere.xyz' :
+	'https://vinylwhere.netlify.com' :
 	'http://localhost:8080'
 
 const getWindowLocation = ClientFunction(() => window.location)
