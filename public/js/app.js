@@ -27,27 +27,6 @@ function throttle(fn, minTime) {
 	}
 }
 
-// Damn you, Safari ;_;
-function get(url, method) {
-	return new Promise((resolve, reject) => {
-		const httpRequest = new XMLHttpRequest()
-		httpRequest.onreadystatechange = _ => {
-			if (httpRequest.readyState === XMLHttpRequest.DONE) {
-				if (httpRequest.status === 200) {
-					resolve({
-						lastModified: httpRequest.getResponseHeader('last-modified'),
-						body: JSON.parse(httpRequest.responseText)
-					})
-				} else {
-					reject(httpRequest)
-				}
-			}
-		}
-		httpRequest.open(method || 'GET', url)
-		httpRequest.send()
-	})
-}
-
 function timeago(date) {
 	const now = new Date()
 	const seconds = (now - date) / 1000
@@ -201,9 +180,9 @@ const Results = (resultsElement, templateElement) => {
 
 // ---- app ----
 // {{{
-const fetchedData = get('//vinylwhere.s3-ap-southeast-1.amazonaws.com/records.grouped.json.gz')
-const records = fetchedData.then(data => data.body)
-const lastModified = fetchedData.then(data => new Date(data.lastModified))
+const fetchedData = fetch('//vinylwhere.s3-ap-southeast-1.amazonaws.com/records.grouped.json.gz')
+const records = fetchedData.then(response => response.json())
+const lastModified = fetchedData.then(response => new Date(response.headers.get('Last-Modified')))
 const blankRecords = Promise.resolve(Array(100).fill(''))
 
 function init() {
