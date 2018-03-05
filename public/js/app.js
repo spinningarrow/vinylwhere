@@ -171,13 +171,9 @@ const searchRecords = (records, query) => {
 }
 
 const showInitialRecords = records => {
-	if (window.location.hash) {
-		const query = router.currentRoute()
-		document.querySelector('#search').value = query
-		vinylwhere.query = query
-	} else {
-		vinylwhere.displayedRecords = records
-	}
+	const query = router.currentRoute()
+	document.querySelector('#search').value = query
+	vinylwhere.query = query
 }
 
 async function init() {
