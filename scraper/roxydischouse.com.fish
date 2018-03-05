@@ -4,7 +4,7 @@ set_color bryellow
 echo roxydischouse.com
 set_color normal
 
-set HOSTNAME 'https://theanalogvault.com'
+set HOSTNAME 'https://roxydischouse.com'
 test "$SCRAPER_ENV" = "test"; and set HOSTNAME 'http://localhost:9002'
 
 mkdir -p dump/roxydischouse.com
