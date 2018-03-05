@@ -117,62 +117,47 @@ const LastUpdated = lastUpdatedElement => {
 // ---- results ----
 // {{{
 const Results = (resultsElement, templateElement) => {
+	const PAGE_SIZE = 100
+	const template = templateElement.innerHTML
+	Mustache.parse(template)
+
 	const handleLoadMore = throttle(_ => {
 		if (window.innerHeight + window.scrollY <
 			document.body.scrollHeight - 500) {
 			return
 		}
 
-		render()
+		vinylwhere.pageNumber++
 	}, 50)
 
-	const render = (function () {
-		let allData
-		let offset
+	const render = (data, pageNumber, isAppend) => {
+		const fragment = document.createDocumentFragment()
+		const ul = document.createElement('ul')
 
-		const COUNT = 100
-		const hasMore = _ => offset < allData.length
-		const template = templateElement.innerHTML
-		Mustache.parse(template)
+		ul.innerHTML = Mustache.render(template, {
+			results: data.slice(
+				(pageNumber - 1) * PAGE_SIZE,
+				pageNumber * PAGE_SIZE
+			)
+		})
 
-		function render(isAppend) {
-			const fragment = document.createDocumentFragment()
-			const ul = document.createElement('ul')
-
-			ul.innerHTML = Mustache.render(template, {
-				results: allData.slice(offset, offset + COUNT)
-			})
-
-			while (ul.hasChildNodes()) {
-				fragment.appendChild(ul.firstChild)
-			}
-
-			if (!isAppend) {
-				resultsElement.innerHTML = ''
-			}
-
-			resultsElement.appendChild(fragment)
+		while (ul.hasChildNodes()) {
+			fragment.appendChild(ul.firstChild)
 		}
 
-		return data => {
-			const isAppend = !data
-			if (!isAppend) [offset, allData] = [0, data]
-
-			if (isAppend && !hasMore()) return false
-
-			render(isAppend)
-			offset += COUNT
-
-			return hasMore()
+		if (!isAppend) {
+			resultsElement.innerHTML = ''
 		}
-	}())
+
+		resultsElement.appendChild(fragment)
+	}
 
 	return {
 		addHandlers() {
 			document.addEventListener('scroll', handleLoadMore)
 		},
 
-		render
+		render,
 	}
 }
 // }}}
@@ -211,6 +196,7 @@ const state = {
 	displayedRecords: [],
 	lastModified: '',
 	query: '',
+	pageNumber: 1,
 }
 
 const handlers = {
@@ -218,7 +204,7 @@ const handlers = {
 		target[prop] = value
 
 		if (prop === 'displayedRecords') {
-			resultsComponent.render(value)
+			resultsComponent.render(value, target.pageNumber)
 		}
 
 		if (prop === 'allRecords') {
@@ -234,7 +220,12 @@ const handlers = {
 
 		if (prop === 'query') {
 			router.route(value)
+			vinylwhere.pageNumber = 1
 			vinylwhere.displayedRecords = searchRecords(target.allRecords, value)
+		}
+
+		if (prop === 'pageNumber') {
+			value > 1 && resultsComponent.render(target.displayedRecords, value, true)
 		}
 	}
 }
