@@ -203,11 +203,11 @@ const handleRouteChange = function () {
 
 		lastQuery = query
 
-		if (!query) return records.then(resultsComponent.render)
+		if (!query) return records.then(r => vinylwhere.displayedRecords = r)
 
 		records
 			.then(records => searchRecords(records, query))
-			.then(resultsComponent.render)
+			.then(r => vinylwhere.displayedRecords = r)
 	}
 }()
 
@@ -215,20 +215,46 @@ const showInitialRecords = records => {
 	if (window.location.hash) {
 		const query = router.currentRoute()
 		document.querySelector('#search').value = query
-		resultsComponent.render(searchRecords(records, query))
+		vinylwhere.displayedRecords = searchRecords(records, query)
 	} else {
-		resultsComponent.render(records)
+		vinylwhere.displayedRecords = records
 	}
 }
 
 function init() {
+	router.onRouteChange(handleRouteChange)
 	document.body.classList.add('loading')
-	blankRecords.then(resultsComponent.render)
-	records.then(_ => document.body.classList.remove('loading'))
-	records.then(showInitialRecords)
-	records.then(_ => router.onRouteChange(handleRouteChange))
-	records.then(_ => searchComponent.addHandlers().enable().focus())
-	records.then(_ => resultsComponent.addHandlers())
-	lastModified.then(_ => lastUpdatedComponent.render())
+	blankRecords.then(blankRecords => vinylwhere.displayedRecords = blankRecords)
+	records.then(allRecords => vinylwhere.allRecords = allRecords)
+	lastModified.then(lastModifiedDate => vinylwhere.lastModified = lastModifiedDate)
 }
 // }}}
+
+const state = {
+	allRecords: [],
+	displayedRecords: [],
+	lastModified: '',
+}
+
+const handlers = {
+	set(target, prop, value, receiver) {
+		target[prop] = value
+
+		if (prop === 'displayedRecords') {
+			resultsComponent.render(value)
+		}
+
+		if (prop === 'allRecords') {
+			document.body.classList.remove('loading')
+			showInitialRecords(value)
+			searchComponent.addHandlers().enable().focus()
+			resultsComponent.addHandlers()
+		}
+
+		if (prop === 'lastModified') {
+			lastUpdatedComponent.render()
+		}
+	}
+}
+
+window.vinylwhere = new Proxy(state, handlers)
