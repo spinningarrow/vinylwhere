@@ -1,4 +1,5 @@
 // vim: foldmethod=marker:foldenable
+const DATA_URI = '//vinylwhere.s3-ap-southeast-1.amazonaws.com/records.grouped.json.gz'
 
 // ---- helpers ----
 // {{{
@@ -105,11 +106,9 @@ const Search = searchElement => ({
 // {{{
 const LastUpdated = lastUpdatedElement => {
 	return {
-		render() {
-			lastModified.then(lastModifiedDate => {
-				lastUpdatedElement.querySelector('time').innerText = timeago(lastModifiedDate)
-				lastUpdatedElement.classList.remove('hidden')
-			})
+		render(lastModifiedDate) {
+			lastUpdatedElement.querySelector('time').innerText = timeago(lastModifiedDate)
+			lastUpdatedElement.classList.remove('hidden')
 		}
 	}
 }
@@ -180,11 +179,6 @@ const Results = (resultsElement, templateElement) => {
 
 // ---- app ----
 // {{{
-const fetchedData = fetch('//vinylwhere.s3-ap-southeast-1.amazonaws.com/records.grouped.json.gz')
-const records = fetchedData.then(response => response.json())
-const lastModified = fetchedData.then(response => new Date(response.headers.get('Last-Modified')))
-const blankRecords = Promise.resolve(Array(100).fill(''))
-
 const searchRecords = (records, query) => {
 	const queryRegexp = new RegExp(query, 'i')
 	return records.filter(r =>
@@ -201,11 +195,14 @@ const showInitialRecords = records => {
 	}
 }
 
-function init() {
+async function init() {
+	const blankRecords = Array(100).fill('')
+	vinylwhere.displayedRecords = blankRecords
 	document.body.classList.add('loading')
-	blankRecords.then(blankRecords => vinylwhere.displayedRecords = blankRecords)
-	records.then(allRecords => vinylwhere.allRecords = allRecords)
-	lastModified.then(lastModifiedDate => vinylwhere.lastModified = lastModifiedDate)
+
+	const response = await fetch(DATA_URI)
+	vinylwhere.lastModified = new Date(response.headers.get('Last-Modified'))
+	vinylwhere.allRecords = await response.json()
 }
 // }}}
 
@@ -232,7 +229,7 @@ const handlers = {
 		}
 
 		if (prop === 'lastModified') {
-			lastUpdatedComponent.render()
+			lastUpdatedComponent.render(value)
 		}
 
 		if (prop === 'query') {
