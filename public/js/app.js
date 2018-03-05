@@ -70,7 +70,7 @@ const router = {
 // {{{
 const Search = searchElement => ({
 	handleSearch: throttle(event => {
-		router.route(event.target.value)
+		vinylwhere.query = event.target.value
 	}, 50),
 
 	handleActivation(event) {
@@ -191,38 +191,17 @@ const searchRecords = (records, query) => {
 		r.artist.match(queryRegexp) || r.album.match(queryRegexp))
 }
 
-const handleRouteChange = function () {
-	let lastQuery = ''
-
-	return () => {
-		const query = router.currentRoute()
-		if (query === lastQuery) return
-
-		document.querySelector('#search').value =
-			document.querySelector('#search').value || query
-
-		lastQuery = query
-
-		if (!query) return records.then(r => vinylwhere.displayedRecords = r)
-
-		records
-			.then(records => searchRecords(records, query))
-			.then(r => vinylwhere.displayedRecords = r)
-	}
-}()
-
 const showInitialRecords = records => {
 	if (window.location.hash) {
 		const query = router.currentRoute()
 		document.querySelector('#search').value = query
-		vinylwhere.displayedRecords = searchRecords(records, query)
+		vinylwhere.query = query
 	} else {
 		vinylwhere.displayedRecords = records
 	}
 }
 
 function init() {
-	router.onRouteChange(handleRouteChange)
 	document.body.classList.add('loading')
 	blankRecords.then(blankRecords => vinylwhere.displayedRecords = blankRecords)
 	records.then(allRecords => vinylwhere.allRecords = allRecords)
@@ -234,6 +213,7 @@ const state = {
 	allRecords: [],
 	displayedRecords: [],
 	lastModified: '',
+	query: '',
 }
 
 const handlers = {
@@ -253,6 +233,11 @@ const handlers = {
 
 		if (prop === 'lastModified') {
 			lastUpdatedComponent.render()
+		}
+
+		if (prop === 'query') {
+			router.route(value)
+			vinylwhere.displayedRecords = searchRecords(target.allRecords, value)
 		}
 	}
 }
