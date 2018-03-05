@@ -187,43 +187,46 @@ async function init() {
 }
 // }}}
 
-const state = {
-	allRecords: [],
-	displayedRecords: [],
-	lastModified: '',
-	query: '',
-	pageNumber: 1,
-}
+window.vinylwhere = function () {
+	const state = {
+		allRecords: [],
+		displayedRecords: [],
+		lastModified: '',
+		query: '',
+		pageNumber: 1,
+	}
 
-const handlers = {
-	set(target, prop, value, receiver) {
-		target[prop] = value
+	const handlers = {
+		set(target, prop, value, receiver) {
+			target[prop] = value
+			console.log(`.${prop} has been set to`, value)
 
-		if (prop === 'displayedRecords') {
-			resultsComponent.render(value, target.pageNumber)
-		}
+			if (prop === 'displayedRecords') {
+				resultsComponent.render(value, target.pageNumber)
+			}
 
-		if (prop === 'allRecords') {
-			document.body.classList.remove('loading')
-			showInitialRecords(value)
-			searchComponent.addHandlers().enable().focus()
-			resultsComponent.addHandlers()
-		}
+			if (prop === 'allRecords') {
+				document.body.classList.remove('loading')
+				showInitialRecords(value)
+				searchComponent.addHandlers().enable().focus()
+				resultsComponent.addHandlers()
+			}
 
-		if (prop === 'lastModified') {
-			lastUpdatedComponent.render(value)
-		}
+			if (prop === 'lastModified') {
+				lastUpdatedComponent.render(value)
+			}
 
-		if (prop === 'query') {
-			router.route(value)
-			vinylwhere.pageNumber = 1
-			vinylwhere.displayedRecords = searchRecords(target.allRecords, value)
-		}
+			if (prop === 'query') {
+				router.route(value)
+				vinylwhere.pageNumber = 1
+				vinylwhere.displayedRecords = searchRecords(target.allRecords, value)
+			}
 
-		if (prop === 'pageNumber') {
-			value > 1 && resultsComponent.render(target.displayedRecords, value, true)
+			if (prop === 'pageNumber') {
+				value > 1 && resultsComponent.render(target.displayedRecords, value, true)
+			}
 		}
 	}
-}
 
-window.vinylwhere = new Proxy(state, handlers)
+	return new Proxy(state, handlers)
+}()
