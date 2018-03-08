@@ -4,7 +4,7 @@ set_color bryellow
 echo www.vinylrecords.sg
 set_color normal
 
-set HOSTNAME 'https://theanalogvault.com'
+set HOSTNAME 'http://www.vinylrecords.sg/'
 test "$SCRAPER_ENV" = "test"; and set HOSTNAME 'http://localhost:9003'
 
 mkdir -p dump/www.vinylrecords.sg
