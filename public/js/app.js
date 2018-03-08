@@ -199,7 +199,6 @@ window.vinylwhere = function () {
 	const handlers = {
 		set(target, prop, value, receiver) {
 			target[prop] = value
-			console.log(`.${prop} has been set to`, value)
 
 			if (prop === 'displayedRecords') {
 				resultsComponent.render(value, target.pageNumber)
