@@ -18,7 +18,7 @@ for i in (seq $total_pages -1 1)
 end
 
 for i in (ls dump/www.vinylrecords.sg/*.html)
-	cat $i | pup '.product-title a json{}' > $i.json
+	cat $i | pup '.products-wrapper .product-title a json{}' > $i.json
 end
 
 jq 'flatten' -s dump/www.vinylrecords.sg/*.json > dump/www.vinylrecords.sg/all.json

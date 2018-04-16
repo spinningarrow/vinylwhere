@@ -33,6 +33,7 @@ test:
 	cd test/; and caddy -pidfile caddy.pid &
 	env SCRAPER_ENV=test $(MAKE)
 	kill (cat test/caddy.pid)
+	less records.grouped.json | jq . | egrep -o '"http.+"' | sort | uniq -d
 
 upload: records.grouped.json.gz
 	aws s3 cp s3://vinylwhere/records.grouped.json.gz \
