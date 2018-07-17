@@ -8,7 +8,7 @@ in pkgs.stdenv.mkDerivation rec {
     caddy
     fish
     jq
-    nodejs-9_x
+    nodejs-10_x
     pup
   ];
 }
