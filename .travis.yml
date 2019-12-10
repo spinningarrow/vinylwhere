@@ -18,4 +18,4 @@ services:
   - xvfb
 
 script:
-  nix-shell --run 'xvfb-run make travis'
+  xvfb-run nix-shell --run 'make travis'
