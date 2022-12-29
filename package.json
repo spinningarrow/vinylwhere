@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "Superfast search engine for vinyl records in Singapore.",
   "devDependencies": {
-    "testcafe": "^0.18.0"
+    "testcafe": "^2.1.0"
   },
   "scripts": {
     "pretest": "which testcafe || npm install",
